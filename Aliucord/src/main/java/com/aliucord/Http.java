@@ -283,7 +283,6 @@ public class Http {
         public Request(String url, String method) throws IOException {
             conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod(method.toUpperCase());
-            conn.addRequestProperty("User-Agent", "Aliucord (https://github.com/Aliucord/Aliucord)");
         }
 
         /**
@@ -491,10 +490,9 @@ public class Http {
         public static Request newDiscordRequest(String route, String method) throws IOException {
             var req = new Request(getDiscordRoute(route), method);
             var headersProvider = RestAPI.AppHeadersProvider.INSTANCE;
-            req.setHeader("User-Agent", headersProvider.getUserAgent())
-                .setHeader("X-Super-Properties", AnalyticSuperProperties.INSTANCE.getSuperPropertiesStringBase64())
+            req.setHeader("X-Super-Properties", AnalyticSuperProperties.INSTANCE.getSuperPropertiesStringBase64())
                 .setHeader("Accept", "*/*")
-                .setHeader("Authorization", headersProvider.getAuthToken())
+                .setHeader("Authorization", "Bot " + headersProvider.getAuthToken())
                 .setHeader("Accept-Language", headersProvider.getAcceptLanguages())
                 .setHeader("X-Discord-Locale", headersProvider.getLocale());
             return req;
@@ -530,18 +528,17 @@ public class Http {
         public static Request newDiscordRNRequest(String route, String method) throws IOException {
             var req = new Request(getDiscordRoute(route), method);
             var headersProvider = RestAPI.AppHeadersProvider.INSTANCE;
-            req.setHeader("User-Agent", RNSuperProperties.userAgent)
-                .setHeader("X-Super-Properties", RNSuperProperties.getSuperPropertiesBase64())
+            req.setHeader("X-Super-Properties", RNSuperProperties.getSuperPropertiesBase64())
                 .setHeader("Accept-Language", headersProvider.getAcceptLanguages())
                 .setHeader("Accept", "*/*")
-                .setHeader("Authorization", headersProvider.getAuthToken())
+                .setHeader("Authorization", "Bot " + headersProvider.getAuthToken())
                 .setHeader("X-Discord-Locale", headersProvider.getLocale())
                 .setHeader("X-Discord-Timezone", TimeZone.getDefault().getID());
             return req;
         }
 
         private static String getDiscordRoute(String route) {
-            return route.startsWith("http") ? route : "https://discord.com/api/v9" + route;
+            return route.startsWith("http") ? route : "https://discord.com/api/v6" + route;
         }
     }
 
